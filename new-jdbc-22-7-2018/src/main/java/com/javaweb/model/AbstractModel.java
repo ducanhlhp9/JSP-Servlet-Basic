@@ -12,9 +12,12 @@ public class AbstractModel<T> {
 	private String modifiedBy;
 	private long[] ids;
 	private List<T> listResult = new ArrayList<>();
-	private int page;
-	private int maxPageItem;
-	private int totalPage;
+	private Integer page;
+	private Integer maxPageItem;
+	private Integer totalPages;
+	private Integer totalItems;
+	private String sortName;
+	private String sortBy;
 
 	public Timestamp getCreatedDate() {
 		return createdDate;
@@ -72,28 +75,56 @@ public class AbstractModel<T> {
 		this.listResult = listResult;
 	}
 
-	public int getPage() {
+	public Integer getPage() {
 		return page;
 	}
 
-	public void setPage(int page) {
+	public void setPage(Integer page) {
 		this.page = page;
 	}
 
-	public int getMaxPageItem() {
+	public Integer getMaxPageItem() {
 		return maxPageItem;
 	}
 
-	public void setMaxPageItem(int maxPageItem) {
+	public void setMaxPageItem(Integer maxPageItem) {
 		this.maxPageItem = maxPageItem;
 	}
 
-	public int getTotalPage() {
-		return totalPage;
+	public Integer getTotalPages() {
+		return totalPages;
 	}
 
-	public void setTotalPage(int totalPage) {
-		this.totalPage = totalPage;
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
 	}
+
+	public Integer getTotalItems() {
+		return totalItems;
+	}
+
+	public void setTotalItems(Integer totalItems) {
+		this.totalItems = totalItems;
+	}
+
+	public String getSortName() {
+		return sortName;
+	}
+
+	public void setSortName(String sortName) {
+		this.sortName = sortName;
+	}
+
+	public String getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+
+	
+
+	
 
 }

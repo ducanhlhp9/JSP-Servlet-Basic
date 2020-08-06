@@ -12,6 +12,7 @@
 		<jstl.version>1.2</jstl.version>
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<mysql.version>8.0.15</mysql.version>
+		<beanutils.version>1.9.3</beanutils.version>
 		<weld.servlet.version>2.4.8.Final</weld.servlet.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -90,6 +91,13 @@
 			<version>1.9.13</version>
 		</dependency>
 		<!-- end json -->
+
+		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${beanutils.version}</version>
+		</dependency>
 
 
 	</dependencies>

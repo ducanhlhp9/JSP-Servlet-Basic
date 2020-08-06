@@ -40,7 +40,7 @@
          <b class="arrow"></b>
          <ul class="submenu nav-hide" style="display: block;">
             <li class="">
-               <a href="<c:url value="admin-news"/>">
+               <a href="<c:url value="admin-news?page=1&maxPageItem=2&sortName=title&sortBy=desc"/>">
                <i class="menu-icon fa fa-caret-right"></i>
                Danh sách bài viết
                </a>

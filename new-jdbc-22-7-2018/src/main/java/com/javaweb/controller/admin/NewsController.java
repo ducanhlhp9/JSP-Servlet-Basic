@@ -12,7 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.javaweb.constant.SystemConstant;
 import com.javaweb.model.NewsModel;
+import com.javaweb.paging.PageRequest;
+import com.javaweb.paging.Pageble;
 import com.javaweb.service.INewsService;
+import com.javaweb.sort.Sorter;
+import com.javaweb.utils.FormUtil;
 
 @WebServlet(urlPatterns = { "/admin-news" })
 public class NewsController extends HttpServlet {
@@ -21,12 +25,30 @@ public class NewsController extends HttpServlet {
 
 	@Inject
 	private INewsService newsService;
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		NewsModel model = new NewsModel();
-		model.setListResult(newsService.findAll());
-		request.setAttribute(SystemConstant.MODEL,model );
+//		NewsModel model = new NewsModel();
+		// get data pagination
+		// c1
+//		String pageStr = request.getParameter("page");
+//		String maxPageItemStr = request.getParameter("maxPageItem");
+//		if(pageStr !=null) {
+//			model.setPage(Integer.parseInt(pageStr));
+//		}else {
+//			model.setPage(1);
+//		}
+//		if(maxPageItemStr != null) {
+//			model.setMaxPageItem(Integer.parseInt(maxPageItemStr));
+//		}
+		// c2
+		NewsModel model = FormUtil.toModel(NewsModel.class, request);
+		Pageble pageble = new PageRequest(model.getPage(), model.getMaxPageItem(), new Sorter(model.getSortName(), model.getSortBy()));
+		model.setListResult(
+				newsService.findAll(pageble));
+		model.setTotalItems(newsService.getTotalItems());
+		model.setTotalPages((int) Math.ceil((double) model.getTotalItems() / model.getMaxPageItem()));
+		request.setAttribute(SystemConstant.MODEL, model);
 		RequestDispatcher rd = request.getRequestDispatcher("/views/admin/news/list.jsp");
 		rd.forward(request, response);
 	}

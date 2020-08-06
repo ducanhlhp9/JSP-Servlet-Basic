@@ -5,6 +5,7 @@ import java.util.List;
 import com.javaweb.dao.INewsDao;
 import com.javaweb.mapper.NewsMapper;
 import com.javaweb.model.NewsModel;
+import com.javaweb.paging.Pageble;
 
 public class NewsDao extends AbstractDAO<NewsModel> implements INewsDao {
 
@@ -27,8 +28,8 @@ public class NewsDao extends AbstractDAO<NewsModel> implements INewsDao {
 		sql.append("description_seo, content, categoryid, createdDate, createdBy, modifiedDate, modifiedBy) ");
 		sql.append("VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		return insert(sql.toString(), newsModel.getTitle(), newsModel.getThumbnail(), newsModel.getDescription_seo(),
-				newsModel.getContent(), newsModel.getCategoryId(), newsModel.getCreatedDate(),
-				newsModel.getCreatedBy(), newsModel.getModifiedDate(), newsModel.getModifiedBy());
+				newsModel.getContent(), newsModel.getCategoryId(), newsModel.getCreatedDate(), newsModel.getCreatedBy(),
+				newsModel.getModifiedDate(), newsModel.getModifiedBy());
 	}
 
 	@Override
@@ -50,9 +51,24 @@ public class NewsDao extends AbstractDAO<NewsModel> implements INewsDao {
 	}
 
 	@Override
-	public List<NewsModel> findAll() {
-		String sql = "SELECT * FROM news";
-		return query(sql, new NewsMapper());
+	public List<NewsModel> findAll(Pageble pageble) {
+//		String sql = "SELECT * FROM news limit ?, ?";
+		StringBuilder sql = new StringBuilder("SELECT * FROM news");
+		if (pageble.getSorter() != null) {
+			sql.append(" ORDER BY " + pageble.getSorter().getSortName() + " " + pageble.getSorter().getSortBy() + " ");
+		}
+		if (pageble.getOffset() != null && pageble.getLimit() != null) {
+			sql.append(" LIMIT "+pageble.getOffset()+", "+pageble.getLimit()+"");
+
+		}
+		return query(sql.toString(), new NewsMapper());
+
+	}
+
+	@Override
+	public int getTotalItem() {
+		String sql = "SELECT count(*) FROM news";
+		return count(sql);
 	}
 
 }

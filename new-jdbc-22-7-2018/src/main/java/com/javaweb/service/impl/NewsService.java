@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import com.javaweb.dao.INewsDao;
 import com.javaweb.model.NewsModel;
+import com.javaweb.paging.Pageble;
 import com.javaweb.service.INewsService;
 
 public class NewsService implements INewsService{
@@ -48,9 +49,14 @@ public class NewsService implements INewsService{
 	}
 
 	@Override
-	public List<NewsModel> findAll() {
+	public List<NewsModel> findAll(Pageble pageble) {
 		
-		return newsDao.findAll();
+		return newsDao.findAll(pageble);
+	}
+
+	@Override
+	public int getTotalItems() {
+		return newsDao.getTotalItem();
 	}
 
 }
