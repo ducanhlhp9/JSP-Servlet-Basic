@@ -16,10 +16,16 @@ public class UserMapper implements RowMapper<UserModel> {
 			user.setFullName(resultSet.getString("fullname"));
 			user.setPassword(resultSet.getString("password"));
 			user.setStatus(resultSet.getInt("status"));
-			RoleModel role = new RoleModel();
-			role.setCode(resultSet.getNString("code"));
-			role.setName(resultSet.getString("name"));
-			user.setRole(role);
+
+			try {
+				RoleModel role = new RoleModel();
+				role.setCode(resultSet.getNString("code"));
+				role.setName(resultSet.getString("name"));
+				user.setRole(role);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+
 			return user;
 		} catch (SQLException e) {
 			return null;

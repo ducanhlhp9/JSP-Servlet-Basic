@@ -1,6 +1,7 @@
 package com.javaweb.controller.web;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
@@ -14,8 +15,10 @@ import com.javaweb.model.UserModel;
 import com.javaweb.service.ICategoryService;
 import com.javaweb.service.IUserService;
 import com.javaweb.utils.FormUtil;
+import com.javaweb.utils.SessionUtil;
+import com.mysql.cj.Session;
 
-@WebServlet(urlPatterns = { "/trang-chu", "/dang-nhap" })
+@WebServlet(urlPatterns = { "/trang-chu", "/dang-nhap","/thoat" })
 public class HomeController extends HttpServlet {
 
 	private static final long serialVersionUID = -374774350676466657L;
@@ -24,16 +27,27 @@ public class HomeController extends HttpServlet {
 
 	@Inject
 	private IUserService userService;
+	
+	ResourceBundle resourceBundle = ResourceBundle.getBundle("message");
+
 
 //	private INewsService newsService;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		String action = request.getParameter("action");
 		if (action != null && action.equals("login")) {
+			String message = request.getParameter("message");
+			String alert = request.getParameter("alert");
+			if(message != null && alert != null) {
+				request.setAttribute("message", resourceBundle.getString("username_password_invalid"));
+				request.setAttribute("alert", alert);
+			}
 			RequestDispatcher rd = request.getRequestDispatcher("/views/login.jsp");
 			rd.forward(request, response);
 		} else if (action != null && action.equals("logout")) {
-
+			SessionUtil.getInstance().removeValue(request, "USERMODEL");
+			response.sendRedirect(request.getContextPath()+"/trang-chu");
 		} else {
 			request.setAttribute("categories", categoryService.findAll());
 //			request.setAttribute("news", newsService.findAll());
@@ -50,14 +64,15 @@ public class HomeController extends HttpServlet {
 			UserModel model = FormUtil.toModel(UserModel.class, request);
 			model = userService.finByUserNameAndPasswordAndStatus(model.getUserName(), model.getPassword(), 1);
 			if (model != null) {
-				if (model.getRole().getCode().equals("USER")) {
+				SessionUtil.getInstance().putValue(request, "USERMODEL", model);
+				if (model.getRole().getCode().equals("user")) {
 					response.sendRedirect(request.getContextPath() + "/trang-chu");
 
-				} else if (model.getRole().getCode().equals("ADMIN")) {
+				} else if (model.getRole().getCode().equals("admin")) {
 					response.sendRedirect(request.getContextPath() + "/admin-home");
 				}
 			} else {
-				response.sendRedirect(request.getContextPath() + "/dang-nhap?action=login");
+				response.sendRedirect(request.getContextPath() + "/dang-nhap?action=login&message=username_password_invalid&alert=danger");
 			}
 		}
 	}
